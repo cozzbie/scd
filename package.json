@@ -1,0 +1,12 @@
+{
+  "name": "scd",
+  "version": "1.0.0",
+  "description": "Soundcloud Downloader",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Timi Aiyemo <cozzbie@gmail.com>",
+  "license": "ISC"
+}
