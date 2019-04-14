@@ -1,6 +1,6 @@
 # WIP: Soundcloud Downloader
 
-A [Nodejs]('https://nodejs.org/en/') Soundcloud Downloader. Download batch songs from an artist or a single track using passed in flags.
+A [Nodejs](https://nodejs.org/en/) Soundcloud Downloader. Download batch songs from an artist or a single track using passed in flags.
 
 ## Install
 
