@@ -11,27 +11,6 @@ const https = require('https');
 const fs = require('fs');
 const base = 'https://api.soundcloud.com';
 const clientid = '2412b70da476791567d496f0f3c26b88';
-const stream = '';
-
-// https
-//     .get(
-//         `https://api.soundcloud.com/tracks/604247484/stream?client_id=2412b70da476791567d496f0f3c26b88`,
-//         res => {
-//             let file = fs.createWriteStream('./out/file.mp3');
-//             res.on('data', d => {
-//                 const str = d.toString('utf8');
-//                 const obj = JSON.parse(str);
-
-//                 https
-//                     .get(obj.location, r => {
-//                         r.on('data', buff => file.write(buff));
-//                         r.on('end', () => file.end());
-//                     })
-//                     .on('error', err => console.log('error', err));
-//             });
-//         }
-//     )
-//     .on('error', err => console.log('error', err));
 
 /**
  * @description Names don't work too well when pulling requests. Fetch and store the ID instead.
@@ -71,7 +50,6 @@ const savestreamtofile = (name, streamarr) => {
 
             resolve(file);
         } catch (e) {
-            console.log('Error: ', e.message);
             reject(e);
         }
     });
@@ -118,8 +96,8 @@ const forEachAsync = async (arr, cb) => {
     }
 };
 
-const run = async () => {
-    const userid = await getuserid('gripss');
+const run = async artist => {
+    const userid = await getuserid(artist);
     const tracks = await gettracks(userid);
 
     forEachAsync(tracks, async track => {
