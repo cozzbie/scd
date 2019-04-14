@@ -107,6 +107,8 @@ const forEachAsync = async (arr, cb) => {
 const run = async artist => {
     init();
 
+    console.log(process.env);
+
     // const userid = await getuserid(artist);
     // const tracks = await gettracks(userid);
 
