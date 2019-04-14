@@ -1,21 +1,33 @@
 /**
- * @name         sCD
+ * @name         SCD
  * @namespace    none
  * @version      1.0.0
  * @description  Batch Soundcloud Downloader
  * @author       Timi Aiyemo
- * @example      node server.js {artist}
+ * @example      node index.js {artist}
  */
 
 const https = require('https');
 const fs = require('fs');
 const base = 'https://api.soundcloud.com';
 const clientid = '2412b70da476791567d496f0f3c26b88';
+const outputdir = './out';
+const flags = ['--artist', '--track'];
+const Spinner = require('cli-spinner').Spinner;
 
+/**
+ * Runs an init script that creates an output folder
+ */
 const init = () => {
-    fs.mkdir('./out', err => {
+    fs.stat(outputdir, (err, stats) => {
         if (err) {
             throw err;
+        } else if (!stats.isDirectory()) {
+            fs.mkdir(outputdir, err => {
+                if (err) {
+                    throw err;
+                }
+            });
         }
     });
 };
@@ -104,21 +116,62 @@ const forEachAsync = async (arr, cb) => {
     }
 };
 
-const run = async artist => {
+/**
+ * @description Batch download an artists tracks
+ * @param {string} name
+ */
+
+const batch = async artist => {
+    const spinner = new Spinner('%s Processing batch download...');
+    spinner.setSpinnerString(20);
+    spinner.start();
+
+    const userid = await getuserid(artist);
+    const tracks = await gettracks(userid);
+
+    forEachAsync(tracks, async track => {
+        const { title, stream_url, original_format } = track;
+        const name = `${title}.${original_format}`;
+
+        const streamarray = await getstreamarray(stream_url);
+        await savestreamtofile(name, streamarray);
+    });
+
+    spinner.stop();
+    console.log('\nDone');
+};
+
+/**
+ * @description Download a single song
+ * @param {string} url
+ */
+
+const single = url => {
+    console.log('Processing track download...');
+    console.log('Done');
+};
+
+/**
+ * Runs the command
+ */
+
+const run = () => {
     init();
 
-    console.log(process.env);
+    const [one, two, ...rest] = process.argv;
+    const artistflag = flags[0];
+    const urlflag = flags[1];
 
-    // const userid = await getuserid(artist);
-    // const tracks = await gettracks(userid);
-
-    // forEachAsync(tracks, async track => {
-    //     const { title, stream_url, original_format } = track;
-    //     const name = `${title}.${original_format}`;
-
-    //     const streamarray = await getstreamarray(stream_url);
-    //     await savestreamtofile(name, streamarray);
-    // });
+    switch (true) {
+        case !!(rest.includes(artistflag) && rest[1]):
+            batch(rest[1]);
+            break;
+        case !!(rest.includes(urlflag) && rest[1]):
+            console.log('url', rest[1]);
+            break;
+        default:
+            console.log('Nothing to run');
+    }
 };
 
 run();
