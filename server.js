@@ -12,6 +12,14 @@ const fs = require('fs');
 const base = 'https://api.soundcloud.com';
 const clientid = '2412b70da476791567d496f0f3c26b88';
 
+const init = () => {
+    fs.mkdir('./out', err => {
+        if (err) {
+            throw err;
+        }
+    });
+};
+
 /**
  * @description Names don't work too well when pulling requests. Fetch and store the ID instead.
  */
@@ -97,16 +105,18 @@ const forEachAsync = async (arr, cb) => {
 };
 
 const run = async artist => {
-    const userid = await getuserid(artist);
-    const tracks = await gettracks(userid);
+    init();
 
-    forEachAsync(tracks, async track => {
-        const { title, stream_url, original_format } = track;
-        const name = `${title}.${original_format}`;
+    // const userid = await getuserid(artist);
+    // const tracks = await gettracks(userid);
 
-        const streamarray = await getstreamarray(stream_url);
-        await savestreamtofile(name, streamarray);
-    });
+    // forEachAsync(tracks, async track => {
+    //     const { title, stream_url, original_format } = track;
+    //     const name = `${title}.${original_format}`;
+
+    //     const streamarray = await getstreamarray(stream_url);
+    //     await savestreamtofile(name, streamarray);
+    // });
 };
 
 run();
